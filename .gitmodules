@@ -1,0 +1,3 @@
+[submodule "mega"]
+	path = mega
+	url = https://github.com/facebookresearch/mega

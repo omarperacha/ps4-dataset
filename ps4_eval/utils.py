@@ -1,95 +1,14 @@
 import torch
 
-from data_ss.utils import res_tokeniser, atom_tokeniser, res_atoms, COORD_NORM, COORD_CLASSES
-from data_ss.utils import load_data, load_ss_dataset
+from ps4_data.utils import load_data, load_cb513_dataset
 from torch import nn, cuda, load, device
-from models_ss.ss_unit import MEGASSUnit, PTConvNet
-from train_ss.losses import cat2cont
+from ps4_models.classifiers import PS4_Mega, PS4_Conv
 from edlib import align
-
-
-def seq2pdb(atoms, residues, coords, guess_specific_atom=False, save=True):
-
-    lines = ["MODEL        1"]
-    current_res = ""
-    res_atoms_list = []
-    for i in range(len(atoms)):
-
-        line_arr = [" "]*78
-        line_arr[0:4] = ["A", "T", "O", "M"]
-
-        atom_ser = ''.join((reversed(f"{i}")))
-        for j in range(len(atom_ser)):
-            line_arr[10-j] = atom_ser[j]
-
-        atom = atom_tokeniser(atoms[i].item(), reverse=True)
-        line_arr[77] = atom
-
-        res = res_tokeniser(residues[i].item(), reverse=True)
-        for r in range(3):
-            line_arr[17 + r] = res[r]
-
-        if res != current_res:
-            current_res = res
-            res_atoms_list = res_atoms(res)
-
-        if guess_specific_atom:
-            specific_atom = ''
-            while specific_atom == '':
-                for el in res_atoms_list:
-                    if el[0] == atom:
-                        specific_atom = el
-                        res_atoms_list.remove(el)
-                        break
-                if specific_atom == '':
-                    res_atoms_list = res_atoms(res)
-
-            specific_atom = ''.join(reversed(specific_atom))
-            for l in range(4):
-                if len(specific_atom) > l:
-                    line_arr[15 - l] = specific_atom[l]
-
-        x_coord = ''.join((reversed(f"{round(cat2cont(coords[i * 3].item()), 3)}")))
-        y_coord = ''.join((reversed(f"{round(cat2cont(coords[(i * 3) + 1].item()), 3)}")))
-        z_coord = ''.join((reversed(f"{round(cat2cont(coords[(i * 3) + 2].item()), 3)}")))
-
-        x_coord = "0" + x_coord if x_coord[2] == "." else x_coord
-        y_coord = "0" + y_coord if y_coord[2] == "." else y_coord
-        z_coord = "0" + z_coord if z_coord[2] == "." else z_coord
-        x_coord = "00" + x_coord if x_coord[1] == "." else x_coord
-        y_coord = "00" + y_coord if y_coord[1] == "." else y_coord
-        z_coord = "00" + z_coord if z_coord[1] == "." else z_coord
-        x_coord = "000." + x_coord if "." not in x_coord else x_coord
-        y_coord = "000." + y_coord if "." not in y_coord else y_coord
-        z_coord = "000." + z_coord if "." not in z_coord else z_coord
-
-        for k in range(8):
-            if k < len(x_coord):
-                line_arr[37 - k] = x_coord[k]
-            if k < len(y_coord):
-                line_arr[45 - k] = y_coord[k]
-            if k < len(z_coord):
-                line_arr[53 - k] = z_coord[k]
-
-        line = ''.join(line_arr)
-        lines.append(line)
-
-    lines.append("TER")
-    lines.append("ENDMDL")
-
-    if save:
-        textfile = open("./eval/protein.pdb", "w")
-        for l in lines:
-            textfile.write(l + "\n")
-        textfile.close()
-    else:
-        for l in lines:
-            print(l)
 
 
 def load_trained_model(load_path):
 
-    model: nn.Module = MEGASSUnit()
+    model: nn.Module = PS4_Mega()
 
     if load_path != '':
         try:
@@ -106,14 +25,6 @@ def load_trained_model(load_path):
     print(pytorch_total_params)
 
     return model
-
-
-def cat2cont(v):
-
-    val = v % (COORD_CLASSES / 3)
-    val = val / 4
-
-    return val - COORD_NORM
 
 
 def check_edit_distance(in_set='cb513', compare_set='train'):
@@ -149,11 +60,7 @@ def __get_loader_for(ds):
     loader_dict = {
         'train': load_data('train'),
         'valid': load_data('valid'),
-        'cb513': load_ss_dataset('CB513', 8),
-        'casp12': load_ss_dataset('CASP12', 8),
-        'ts115': load_ss_dataset('TS115', 8),
-        'new364': load_ss_dataset('NEW364', 8),
-        'netsurf': load_ss_dataset('Train', 8),
+        'cb513': load_cb513_dataset()
     }
 
     return loader_dict[dataset]
