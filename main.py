@@ -4,7 +4,7 @@ from ps4_eval.eval import *
 
 if __name__ == '__main__':
 
-    eval_cb513()
+    print("test imports")
 
 
 
