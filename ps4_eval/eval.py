@@ -36,8 +36,6 @@ def eval_ss(load_path):
             print("res_lvl")
             __q8_q3_from_confusion(ss_confusion)
 
-    with open('ss_confusion.np', 'wb') as f:
-        np.save(f, ss_confusion)
     print("\nDONE:", "\n", ss_confusion)
 
 
@@ -91,16 +89,13 @@ def eval_cb513(load_path, use_mask=True):
                 val_accs.append(val_acc)
                 q3_accs.append(q3_acc)
             print("\n", count)
-            print("\nconfidence:", torch.mean(ss_probs).item(), "accuracy:", ss_acc, "len:", seq_size)
+            print("accuracy:", ss_acc, "len:", seq_size)
             whole_accs.append(ss_acc)
             __q8_q3_from_confusion(ss_confusion)
 
-    with open('ss_confusion.np', 'wb') as f:
-        np.save(f, ss_confusion)
     print(f"\nDONE: CB513, whole acc: {sum(whole_accs)/len(whole_accs)}\n"
           f"val acc: {sum(val_accs)/len(val_accs)}\n"
-          f"q3 acc: {sum(q3_accs)/len(val_accs)}",
-          "\n", ss_confusion)
+          f"q3 acc: {sum(q3_accs)/len(val_accs)}")
 
 
 # MARK: private
@@ -124,10 +119,7 @@ def __q8_q3_from_confusion(confusion):
     q3 = np.zeros((3, 8))
 
     # Q8
-    print("q8")
     for i in range(len(confusion)):
-
-        print("\t", i, "-", confusion[i][i], osum(confusion[i]))
 
         if i in [2, 3, 6]:
             q3[1] += confusion[i]
@@ -135,16 +127,6 @@ def __q8_q3_from_confusion(confusion):
             q3[2] += confusion[i]
         else:
             q3[0] += confusion[i]
-
-    print("\nq3")
-
-    for i in range(len(q3)):
-        if i == 0:
-            print("\t", i, "-", q3[0][0] + q3[0][1] + q3[0][4], osum(q3[i]))
-        elif i == 1:
-            print("\t", i, "-", q3[1][2] + q3[1][3] + q3[1][6], osum(q3[i]))
-        else:
-            print("\t", i, "-", q3[2][5] + q3[2][7], osum(q3[i]))
 
 
 def __assess_q3(val, cand):
