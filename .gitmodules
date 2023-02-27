@@ -1,3 +1,6 @@
 [submodule "mega"]
 	path = mega
 	url = https://github.com/facebookresearch/mega
+[submodule "ps4-rs"]
+	path = ps4-rs
+	url = https://github.com/omarperacha/ps4-rs
