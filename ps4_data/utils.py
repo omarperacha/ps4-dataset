@@ -14,7 +14,7 @@ NUM_SAMPLES = TRAIN_SAMPLES + VALID_SAMPLES
 
 SS_CLASSES = 8
 
-PROTTRANS_EMBS_PATH = ''
+PROTTRANS_EMBS_PATH = "ps4_data/data/protT5/output/per_residue_embeddings"
 
 
 def generte_chunk_pt_embs(one_chunk=False):
@@ -87,7 +87,7 @@ def q8_to_q3(q8):
 # Mark: main processing
 def save_and_tokenise_data():
 
-    df = pd.read_csv(f'data_ss/data/data.csv')
+    df = pd.read_csv('ps4_data/data/data.csv')
 
     residues_t = []
     residues_v = []
@@ -208,8 +208,8 @@ def load_data(phase, shuffle=True):
         if not file.endswith(".pt"):
             continue
 
-        R = torch.load(f'data_ss/data/{phase}/{res_dir}/{file}')
-        Y_ss = torch.load(f'data_ss/data/{phase}/ss/{file}')
+        R = torch.load(f'ps4_data/data/{phase}/{res_dir}/{file}')
+        Y_ss = torch.load(f'ps4_data/data/{phase}/ss/{file}')
 
         yield R, Y_ss
 
@@ -245,14 +245,14 @@ def pt_2_csv(phase):
         ' dssp8': dssps
     })
 
-    df.to_csv(fr'data_ss/data/ss/{phase}.csv', index=False, header=True)
+    df.to_csv(fr'ps4_data/data/{phase}.csv', index=False, header=True)
 
 
 # Mark: single sequence secondary structure
 def load_cb513_dataset():
 
     df = pd.read_csv(f'ps4_data/data/cb513/CB513_HHblits.csv')
-    embs = np.load(f'data_ss/data/ss/CB513_embeddings.npz', allow_pickle=True)
+    embs = np.load(f'ps4_data/data/cb513/CB513_embeddings.npz', allow_pickle=True)
     for row in range(len(df)):
         res_string = df['input'][row]
 
@@ -267,28 +267,6 @@ def load_cb513_dataset():
         _, y, mask = get_input_data_from_res_seq(res_string, ss_string, mask_str, 'CB513')
         r = torch.from_numpy(embs[str(row)]).float()
         yield r, y, mask
-
-
-def check_ss_datasets():
-
-    for ds in ["CB513", "CASP12", "TS115", "NEW364", "Train"]:
-        count = {}
-        print("\n", ds)
-        df = pd.read_csv(f'data_ss/data/ss/{ds}_HHblits.csv')
-        print(df.shape)
-        print(df.columns)
-        for row in range(len(df[" dssp8"])):
-            mask_pointer = 0
-            for c in df[" dssp8"][row]:
-                if c != ' ':
-                    if (df[" cb513_mask"][row][mask_pointer]) == "1":
-                        count[c] = count.get(c, 0) + 1
-                    mask_pointer += 2
-
-                mask_pointer += 1
-
-        for k in count:
-            print(k, ":", count[k])
 
 
 def get_input_data_from_res_seq(res_string, ss_string, mask_string, ds):
@@ -312,34 +290,13 @@ def get_input_data_from_res_seq(res_string, ss_string, mask_string, ds):
 
 
 # MARK:- FASTA
-def get_fasta_from_csv():
+def get_fasta_from_csv(csv_path, save_pth):
 
-    df = pd.read_csv(f'data_ss/data/data.csv')
-    with open(f'data_ss/data/data.fasta', 'w') as f:
-        for row in range(len(df["input"])):
-            res_string = df['input'][row]
-            name_string = df[f'chain_id'][row]
-            pdb = name_string[0:4].upper()
-            chain = name_string[4]
-            header = f'>pdb|{pdb}|{chain}'
-            f.write(header + '\n')
-            print(header)
-            for i in range(0, len(res_string), 80):
-                line = res_string[i:i+80]
-                f.write(line + '\n')
-                print(line)
-            print(' ')
-            f.write('\n')
-        f.close()
-
-
-def get_fasta_alt_csv(ds_name):
-
-    df = pd.read_csv(f'data_ss/data/ss/{ds_name}_HHblits.csv')
-    with open(f'data_ss/data/ss/{ds_name}.fasta', 'w') as f:
+    df = pd.read_csv(csv_path)
+    with open(save_pth, 'w') as f:
         for row in range(len(df["input"])):
             res_string = df['input'][row].replace(" ", "")
-            header = f'>{ds_name}|{row}'
+            header = f'>PS4-Extended|{row}'
             f.write(header + '\n')
             print(header)
             for i in range(0, len(res_string), 80):
