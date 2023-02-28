@@ -13,7 +13,7 @@ def generate_embedings(fasta_path):
     weights_path = "ps4_data/data/protT5/protT5_checkpoint"
     per_residue_path = "ps4_data/data/protT5/output/per_residue_embeddings"  # where to store the embeddings
     for dir_path in [protT5_path, weights_path, per_residue_path]:
-        create_dir(dir_path)
+        __create_dir(dir_path)
 
     # Download weights
     weights_remote_url = "http://data.bioembeddings.com/public/embeddings/feature_models/t5/protT5_checkpoint.pt"
@@ -23,10 +23,10 @@ def generate_embedings(fasta_path):
     print("Using {}".format(device))
 
     # Load the encoder part of ProtT5-XL-U50 in half-precision (recommended)
-    model, tokenizer = get_T5_model()
+    model, tokenizer = __get_T5_model()
 
     # Load fasta.
-    all_seqs = read_fasta(fasta_path)
+    all_seqs = __read_fasta(fasta_path)
 
     chunk_size = 1000
 
@@ -34,13 +34,13 @@ def generate_embedings(fasta_path):
     for i in range(0, len(all_seqs), chunk_size):
         keys = list(all_seqs.keys())[i: chunk_size + i]
         seqs = {k: all_seqs[k] for k in keys}
-        results = get_embeddings(model, tokenizer, seqs, device)
+        results = __get_embeddings(model, tokenizer, seqs, device)
 
         # Store per-residue embeddings
-        save_embeddings(results["residue_embs"], per_residue_path + f"{i}.npz")
+        __save_embeddings(results["residue_embs"], per_residue_path + f"{i}.npz")
 
 
-def get_T5_model(device):
+def __get_T5_model(device):
 
     model = T5EncoderModel.from_pretrained("Rostlab/prot_t5_xl_half_uniref50-enc")
     model = model.to(device) # move model to GPU
@@ -50,7 +50,7 @@ def get_T5_model(device):
     return model, tokenizer
 
 
-def read_fasta(fasta_path, split_char="|", id_field=1):
+def __read_fasta(fasta_path, split_char="|", id_field=1):
     '''
         Reads in fasta file containing multiple sequences.
         Split_char and id_field allow to control identifier extraction from header.
@@ -82,11 +82,11 @@ def read_fasta(fasta_path, split_char="|", id_field=1):
     return seqs
 
 
-def save_embeddings(emb_dict,out_path):
+def __save_embeddings(emb_dict,out_path):
     np.savez_compressed(out_path, **emb_dict)
 
 
-def get_embeddings(model, tokenizer, seqs, device, per_residue=True,
+def __get_embeddings(model, tokenizer, seqs, device, per_residue=True,
                    max_residues=4000, max_seq_len=1000, max_batch=100):
 
     results = {"residue_embs": dict(),
@@ -142,6 +142,6 @@ def get_embeddings(model, tokenizer, seqs, device, per_residue=True,
     return results
 
 
-def create_dir(path):
+def __create_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)

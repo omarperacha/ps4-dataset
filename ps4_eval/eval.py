@@ -100,12 +100,12 @@ def eval_cb513(load_path, use_mask=True, model_name='PS4_Mega'):
                 val_accs.append(val_acc)
                 q3_accs.append(q3_acc)
             print("\n", count)
-            print("accuracy:", ss_acc, "len:", seq_size)
+            print("whole sequence q8 accuracy:", ss_acc, "len:", seq_size)
             whole_accs.append(ss_acc)
             __q8_q3_from_confusion(ss_confusion)
 
-    print(f"\nDONE: CB513, whole acc: {sum(whole_accs)/len(whole_accs)}\n"
-          f"val acc: {sum(val_accs)/len(val_accs)}\n"
+    print(f"\nDONE: CB513, whole q8 acc: {sum(whole_accs)/len(whole_accs)}\n"
+          f"val only q8 acc: {sum(val_accs)/len(val_accs)}\n"
           f"q3 acc: {sum(q3_accs)/len(val_accs)}")
 
 

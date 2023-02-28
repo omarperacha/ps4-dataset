@@ -1,6 +1,12 @@
+import sys
 import ps4_rs
 
-
-def compare_datasets(set1_path, set2_path):
-    ps4_rs.compare_two_sets(set1_path, set2_path)
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        if len(sys.argv) > 2:
+            ps4_rs.parse_new_samples(sys.argv[1], sys.argv[2])
+        else:
+            ps4_rs.parse_new_samples(sys.argv[1], 'ps4_data/data/ps4_extended.csv')
+    else:
+        print('Please specify a path to a directory containing DSSP files')
 
