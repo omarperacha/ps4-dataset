@@ -22,6 +22,7 @@ def print_help():
     print('\t\t\t--conv\t\t\tUse the Conv model')
     print('\t\t\t3: path to model weights - optional')
     print('\t\t\te.g. ps4_models/Mega/PS4-Mega_loss-0.633_acc-78.176.pt')
+
     print('\t--gen_dataset, -gd\tGenerate a dataset for training')
 
 

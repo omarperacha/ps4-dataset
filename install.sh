@@ -5,4 +5,4 @@ pip install -e .
 cd ..
 cd ps4-rs || exit
 maturin build --release
-pip install target/wheels/*.whl
+pip install --force-reinstall target/wheels/*.whl
