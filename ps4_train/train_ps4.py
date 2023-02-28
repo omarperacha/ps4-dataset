@@ -15,6 +15,7 @@ TRAIN_ONLY_PHASES = ['train']
 
 def train(
         epochs,
+        model_name='PS4_Mega',
         save_model=True,
         load_path='',
         shuffle_batches=True,
@@ -27,7 +28,10 @@ def train(
         "batch_size": 1
     }
 
-    model: nn.Module = PS4_Mega()
+    if model_name.lower() not in ['ps4_conv', 'ps4_mega']:
+        raise ValueError(f'Model name {model_name} not recognised, please choose from PS4_Conv, PS4_Mega')
+
+    model: nn.Module = PS4_Mega() if model_name.lower() == 'ps4_mega' else PS4_Conv()
 
     if load_path != '':
         try:
@@ -44,8 +48,8 @@ def train(
     print(pytorch_total_params)
 
     if cuda.is_available():
-        # setting model and data devices is handled within model files, allowing 4 GPU model distributed training
         torch.cuda.empty_cache()
+        model.cuda()
 
     base_lr = 0.6
     max_lr = 0.00003
@@ -111,12 +115,15 @@ def train(
                 Ys = ys.view(1, seq_size).long()
 
                 R = r.view(1, seq_size, 1024)
+                if cuda.is_available():
+                    R = R.cuda()
+                    Ys = Ys.cuda()
 
                 with set_grad_enabled(phase == 'train'):
                     y_hat = model(R)
                     _, ss_preds = torch.max(torch.softmax(y_hat, 2), 2)
 
-                    loss = cath_criterion(y_hat, Ys.to(y_hat.device))
+                    loss = cath_criterion(y_hat, Ys)
 
                 loss_epoch += loss.item()
 
@@ -159,20 +166,20 @@ def train(
             ave_loss_epoch = loss_epoch/count
 
             epoch_acc = 100 * running_accuray.float() / token_count
-            print('\tfinished %s phase [%d] loss: %.3f, s_acc: %.3f' % (phase,
-                                                                        epoch + 1,
-                                                                        ave_loss_epoch,
-                                                                        epoch_acc))
+            print('\tfinished %s phase [%d] loss: %.3f, acc: %.3f' % (phase,
+                                                                      epoch + 1,
+                                                                      ave_loss_epoch,
+                                                                      epoch_acc))
 
         print('\n\ttime:', time_since(start), '\n')
 
         if epoch_acc > best_val_acc:
             best_val_acc = epoch_acc
-            print("\tNEW BEST s_acc: %.3f" % best_val_acc, '\n')
+            print("\tNEW BEST acc: %.3f" % best_val_acc, '\n')
 
             # save model when validation loss improves
             if save_model:
-                save_model_checkpoint(epoch, ave_loss_epoch, model, f"OmegaFold", epoch_acc)
+                save_model_checkpoint(epoch, ave_loss_epoch, model, model_name, epoch_acc)
 
         else:
             print("\ts_acc DID NOT IMPROVE FROM %.3f" % best_val_acc, '\n')

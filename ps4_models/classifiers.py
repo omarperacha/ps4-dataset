@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 from ps4_data.utils import SS_CLASSES
-from ps4_train.utils import handle_cuda
 from mega.fairseq.modules.mega_layer import MegaEncoderLayer
 
 
@@ -70,14 +69,14 @@ class PS4_Mega(nn.Module):
             mega = MegaEncoderLayer(self.args)
             megas.append(mega)
 
-        self.seq_unit = handle_cuda(MegaSequence(*megas), 0, self.model_parallel)
+        self.seq_unit = MegaSequence(*megas)
 
-        self.dropout_i = handle_cuda(nn.Dropout(max(0.0, self.dropout - 0.2)), 1, self.model_parallel)
+        self.dropout_i = nn.Dropout(max(0.0, self.dropout - 0.2))
 
         # output layer which projects back to tag space
         out_dim = self.input_size
 
-        self.hidden_to_tag = handle_cuda(nn.Linear(out_dim, self.nb_tags, bias=False), 1, self.model_parallel)
+        self.hidden_to_tag = nn.Linear(out_dim, self.nb_tags, bias=False)
 
     def init_hidden(self):
         # the weights are of the form (nb_layers, batch_size, nb_rnn_units)
@@ -93,7 +92,7 @@ class PS4_Mega(nn.Module):
         self.seq_len = r.shape[1]
 
         # residue encoding
-        R = handle_cuda(r, 1, self.model_parallel).view(self.seq_len, self.batch_size,  self.aux_emb_size_l)
+        R = r.view(self.seq_len, self.batch_size,  self.aux_emb_size_l)
 
         X = self.dropout_i(R)
 

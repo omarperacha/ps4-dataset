@@ -1,9 +1,7 @@
 import os
-import pickle
 import numpy as np
 import pandas as pd
 import random
-from copy import deepcopy
 
 import torch
 
@@ -163,6 +161,7 @@ def save_torch_data(d_type):
 
     all_d = np.load(f'ps4_data/data/{d_type}.npz', allow_pickle=True)
     for phase in ['train', 'valid']:
+        create_dir_if_not_exists(f'ps4_data/data/{phase}/{d_type}')
         for sample in all_d[phase]:
             converted_sample = torch.Tensor(sample).int()
             num = len(os.listdir(f'ps4_data/data/{phase}/{d_type}'))
@@ -173,6 +172,7 @@ def save_pt_embs_torch():
     all_chains = np.load(f'ps4_data/data/chain_ids.npz', allow_pickle=True)
     for phase in ['train', 'valid']:
         print(phase)
+        create_dir_if_not_exists(f'ps4_data/data/{phase}/prot_embs')
         for chain in all_chains[phase]:
             print('\t', chain)
             for chunk in generte_chunk_pt_embs():
@@ -187,6 +187,7 @@ def save_pt_embs_torch():
 def convert_to_protrans():
     for phase in ['train', 'valid']:
         all_d = np.load(f'ps4_data/data/residues.npz', allow_pickle=True)
+        create_dir_if_not_exists(f'ps4_data/data/{phase}/res_protrans')
         for sample in all_d[phase]:
             converted = __tokenise_as_protrans(sample)
             converted_sample = torch.Tensor(converted).int()
@@ -312,5 +313,10 @@ def __tokenise_as_protrans(sample):
 
     protrans_tokeniser = [3, 8, 17, 10, 22, 9, 16, 5, 20, 12, 4, 14, 19, 15, 13, 7, 11, 21, 18, 6, -1, -2, 23]
     return [protrans_tokeniser[i] for i in sample]
+
+
+def create_dir_if_not_exists(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 

@@ -1,26 +1,15 @@
 import time
 import os
 import math
-from torch import save, cuda
-
-
-def handle_cuda(unit, device, parallel):
-    if cuda.is_available():
-        if parallel:
-            val = device
-        else:
-            val = 0
-        return unit.to(f'cuda:{val}')
-    else:
-        return unit
+from torch import save
 
 
 def save_model_checkpoint(epoch, ave_loss_epoch, model, model_name, acc):
-    test = os.listdir('models_ss/')
+    test = os.listdir('ps4_models/')
 
     for item in test:
         if item.endswith(".pt"):
-            os.remove(os.path.join('models_ss', item))
+            os.remove(os.path.join('ps4_models', item))
 
     path_loss = round(ave_loss_epoch, 3)
     path_acc = '%.3f' % acc
