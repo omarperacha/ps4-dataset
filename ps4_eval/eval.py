@@ -1,15 +1,17 @@
 from ps4_eval.utils import *
 from ps4_data.utils import *
 import numpy as np
-from builtins import sum as osum
 
 
-def eval_ss(load_path):
+def eval_ps4_test(load_path, model_name='PS4_Mega'):
     print("starting")
-    model = load_trained_model(load_path)
+    model = load_trained_model(load_path, model_name)
 
     ss_confusion = np.zeros((SS_CLASSES, SS_CLASSES))
     count = 0
+
+    whole_accs = []
+    q3_accs = []
 
     for r, ys in load_data('valid', shuffle=False):
 
@@ -26,22 +28,31 @@ def eval_ss(load_path):
             probs = torch.softmax(y_hat, 2)
             _, ss_preds = torch.max(probs, 2)
 
+            ss_acc = 0
+            q3_acc = 0
+
             for i in range(seq_size):
                 val = Ys[0][i].item()
                 cand = ss_preds[0][i].item()
 
                 ss_confusion[val, cand] += 1
 
+                ss_acc += 1 if val == cand else 0
+                q3_acc += 1 if __assess_q3(val, cand) else 0
+
+            ss_acc /= seq_size
             print("\n", count)
-            print("res_lvl")
+            print("accuracy:", ss_acc, "len:", seq_size)
+            whole_accs.append(ss_acc)
             __q8_q3_from_confusion(ss_confusion)
 
-    print("\nDONE:", "\n", ss_confusion)
+    print(f"val acc: {sum(whole_accs)/len(whole_accs)}\n"
+          f"q3 acc: {sum(q3_accs)/len(whole_accs)}")
 
 
-def eval_cb513(load_path, use_mask=True):
+def eval_cb513(load_path, use_mask=True, model_name='PS4_Mega'):
     print("starting")
-    model = load_trained_model(load_path)
+    model = load_trained_model(load_path, model_name)
 
     ss_confusion = np.zeros((SS_CLASSES, SS_CLASSES))
     count = 0
@@ -136,3 +147,4 @@ def __assess_q3(val, cand):
         return cand in [5, 7]
     else:
         return cand in [0, 1, 4]
+

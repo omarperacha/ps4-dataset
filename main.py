@@ -4,7 +4,7 @@ from ps4_eval.eval import *
 
 if __name__ == '__main__':
 
-    eval_cb513("ps4_models/Mega/PS4-Mega_loss-0.633_acc-78.176.pt")
+    eval_ps4_test("ps4_models/Mega/PS4-Mega_loss-0.633_acc-78.176.pt")
 
 
 
