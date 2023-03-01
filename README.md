@@ -1,8 +1,10 @@
 # PS4 Dataset 🧬
 
-PS4 is the largest open-source dataset for Protein Single Sequence Secondary Structure prediction. With the help of the community, we can continue to grow PS4 and ensure a high-quality, non-redundant dataset.
+PS4 is the largest open-source dataset for Protein Single Sequence Secondary Structure prediction. 
 
 This repository contains the data itself, methods to validate and add new samples to the dataset, and a toolkit for developing and evaluating state-of-the-art secondary structure prediction models.
+
+For more information, see the official [paper](https://www.biorxiv.org/content/10.1101/2023.02.28.530456v1).
 
 ## Data
 
@@ -62,7 +64,7 @@ You can optionally specify a path to your own model weights as a final argument 
 
 ### Extending the Dataset
 
-To preprocess new samples to add them to the PS4, run the following to ensure non-redundancy against the rest of the PS4 dataset and the CB513 using the `ps4-rs` package:
+With the help of the community, we can continue to grow PS4 and ensure a high-quality, non-redundant dataset. To preprocess new samples to add them to the PS4, run the following to ensure non-redundancy against the rest of the PS4 dataset and the CB513 using the `ps4-rs` package:
 ```
 python extend_ps4.py <in_path> <out_path>
 ```
