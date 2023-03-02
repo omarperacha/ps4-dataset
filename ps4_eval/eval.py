@@ -124,6 +124,31 @@ def __get_res_pred(current_r_probs, thresh=0):
     return post
 
 
+# MARK: sampling from new sequence
+def sample_new_sequence(embs_load_path, weights_load_path, model_name='PS4_Mega'):
+
+    model = load_trained_model(weights_load_path, model_name)
+
+    for r in load_embs_for_sampling(embs_load_path):
+
+        seq_size = len(r)
+        R = r.view(1, seq_size)
+
+        pred_ss = ''
+
+        with torch.no_grad():
+            y_hat = model(R)
+            probs = torch.softmax(y_hat, 2)
+            _, ss_preds = torch.max(probs, 2)
+
+            for i in range(seq_size):
+                ss = ss_preds[0][i].item()
+                ss = ss_tokeniser(ss, reverse=True)
+                pred_ss += ss
+
+        print(f'\t{pred_ss}')
+
+
 def __q8_q3_from_confusion(confusion):
 
     # c, h, e

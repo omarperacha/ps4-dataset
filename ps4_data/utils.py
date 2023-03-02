@@ -270,7 +270,16 @@ def load_cb513_dataset():
         yield r, y, mask
 
 
-def get_input_data_from_res_seq(res_string, ss_string, mask_string, ds):
+def load_embs_for_sampling(emb_path):
+
+    embs = np.load(emb_path, allow_pickle=True)
+    for k, v in embs:
+        print("protein ID: ", k)
+        r = torch.from_numpy(v).float()
+        yield r
+
+
+def get_input_data_from_res_seq(res_string, ss_string, mask_string):
 
     R = []
     Y = []

@@ -10,7 +10,7 @@ For more information, see the official [paper](https://www.biorxiv.org/content/1
 
 ## Data
 
-The core dataset is contained in `ps4_data/data/data.csv`. This contains 18,731 proteins with their PDB code, index of the first residue in their respective DSSP file, their residue sequence and 9-category secondary structure sequence (inluding polyproline helices).
+The core dataset is contained in `ps4_data/data/data.csv`. This contains 18,731 proteins with their PDB code, index of the first residue in their respective DSSP file, their residue sequence and 9-category secondary structure sequence (including polyproline helices).
 
 The train/test split can be found in `ps4_data/data/chain_ids.npz`.
 
@@ -54,7 +54,7 @@ To train a custom model, add your model code and make the relevant adjustments t
 
 ### Evaluation
 
-You once you've run `--gen_dataset`, you can easily evaluate pretained models on the PS4 test set or the CB513. For example, to evaluate PS4-Mega on CB513:
+Once you've run `--gen_dataset`, you can easily evaluate pretained models on the PS4 test set or the CB513. For example, to evaluate PS4-Mega on CB513:
 ```
 python main.py --eval --cb513 --mega
 ```
@@ -63,6 +63,18 @@ Or to evaluate PS4-Conv on the PS4 test set:
 python main.py --eval --ps4 --conv
 ```
 You can optionally specify a path to your own model weights as a final argument to `python main.py --eval` to evaluate a custom model.
+
+### Predicting Secondary Structure for New Sequences 
+
+You can use our pretrained models to predict secondary structure on new sequences listed in a FASTA file:
+```
+python main.py --sample <fasta_path>
+```
+Or to specify to use PS4-Conv instead of PS4-Mega:
+```
+python main.py --sample <fasta_path> --conv
+```
+Sampling also involves extracting embeddings from a large pretrained protein language model. It is recommended to run this process on a machine with at least 16GB of RAM.  
 
 ### Extending the Dataset
 

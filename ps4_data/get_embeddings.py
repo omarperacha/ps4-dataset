@@ -6,12 +6,13 @@ import os
 import wget
 
 
-def generate_embedings(fasta_path):
+def generate_embedings(fasta_path, output_path=None):
 
     # Create directories
     protT5_path = "ps4_data/data/protT5"
     weights_path = "ps4_data/data/protT5/protT5_checkpoint"
-    per_residue_path = "ps4_data/data/protT5/output/per_residue_embeddings"  # where to store the embeddings
+    # where to store the embeddings
+    per_residue_path = "ps4_data/data/protT5/output/per_residue_embeddings" if output_path is None else output_path
     for dir_path in [protT5_path, weights_path, per_residue_path]:
         __create_dir(dir_path)
 
