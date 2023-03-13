@@ -1,4 +1,4 @@
-from ps4_data.utils import load_data, load_cb513_dataset
+from ps4_data.utils import load_data, load_alt_dataset
 from torch import nn, cuda, load, device
 from ps4_models.classifiers import PS4_Mega, PS4_Conv
 
@@ -34,7 +34,8 @@ def __get_loader_for(ds):
     loader_dict = {
         'train': load_data('train'),
         'valid': load_data('valid'),
-        'cb513': load_cb513_dataset()
+        'cb513': load_alt_dataset('cb513'),
+        'ts115': load_alt_dataset('ts115')
     }
 
     return loader_dict[dataset]

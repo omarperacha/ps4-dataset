@@ -62,7 +62,9 @@ if __name__ == '__main__':
                         path = sys.argv[4]
 
                 if sys.argv[2] == '--cb513':
-                    eval_cb513(path, model_name=model_name)
+                    eval_alt(path, ds_name='cb513', model_name=model_name)
+                elif sys.argv[2] == '--ts115':
+                    eval_alt(path, ds_name='ts115', model_name=model_name)
                 elif sys.argv[2] == '--ps4':
                     eval_ps4_test(path, model_name=model_name)
                 else:
@@ -99,7 +101,6 @@ if __name__ == '__main__':
 
     else:
         print_help()
-
 
 
 
