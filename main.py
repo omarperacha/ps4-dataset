@@ -54,7 +54,7 @@ if __name__ == '__main__':
                     if sys.argv[3] in ['--mega', '--conv']:
                         if sys.argv[3] == '--conv':
                             model_name = 'PS4_Conv'
-                            weights_path = 'ps4_models/Conv/PS4-Conv_epoch-5_loss-0.652_acc-77.905.pt'
+                            path = 'ps4_models/Conv/PS4-Conv_epoch-5_loss-0.652_acc-77.905.pt'
                     else:
                         print(f'Please specify a valid model name. found: {sys.argv[3]}')
 
@@ -62,7 +62,9 @@ if __name__ == '__main__':
                         path = sys.argv[4]
 
                 if sys.argv[2] == '--cb513':
-                    eval_cb513(path, model_name=model_name)
+                    eval_alt(path, ds_name='cb513', model_name=model_name)
+                elif sys.argv[2] == '--ts115':
+                    eval_alt(path, ds_name='ts115', model_name=model_name)
                 elif sys.argv[2] == '--ps4':
                     eval_ps4_test(path, model_name=model_name)
                 else:
@@ -99,7 +101,6 @@ if __name__ == '__main__':
 
     else:
         print_help()
-
 
 
 

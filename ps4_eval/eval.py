@@ -50,7 +50,7 @@ def eval_ps4_test(load_path, model_name='PS4_Mega'):
           f"q3 acc: {sum(q3_accs)/len(whole_accs)}")
 
 
-def eval_cb513(load_path, use_mask=True, model_name='PS4_Mega'):
+def eval_alt(load_path, ds_name='cb513', use_mask=True, model_name='PS4_Mega'):
     print("starting")
     model = load_trained_model(load_path, model_name)
 
@@ -61,7 +61,7 @@ def eval_cb513(load_path, use_mask=True, model_name='PS4_Mega'):
     val_accs = []
     q3_accs = []
 
-    for r, y, mask in load_cb513_dataset():
+    for r, y, mask in load_alt_dataset(ds_name):
 
         count += 1
 
@@ -104,7 +104,7 @@ def eval_cb513(load_path, use_mask=True, model_name='PS4_Mega'):
             whole_accs.append(ss_acc)
             __q8_q3_from_confusion(ss_confusion)
 
-    print(f"\nDONE: CB513, whole q8 acc: {sum(whole_accs)/len(whole_accs)}\n"
+    print(f"\nDONE: {ds_name}, whole q8 acc: {sum(whole_accs)/len(whole_accs)}\n"
           f"val only q8 acc: {sum(val_accs)/len(val_accs)}\n"
           f"q3 acc: {sum(q3_accs)/len(val_accs)}")
 

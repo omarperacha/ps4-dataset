@@ -250,10 +250,13 @@ def pt_2_csv(phase):
 
 
 # Mark: single sequence secondary structure
-def load_cb513_dataset():
+def load_alt_dataset(ds_name):
 
-    df = pd.read_csv(f'ps4_data/data/cb513/CB513_HHblits.csv')
-    embs = np.load(f'ps4_data/data/cb513/CB513_embeddings.npz', allow_pickle=True)
+    if ds_name.upper() not in ['CB513', 'TS115']:
+        raise ValueError(f"ds_name must be one of ['CB513', 'TS115'], got {ds_name}")
+
+    df = pd.read_csv(f'ps4_data/data/{ds_name.lower()}/{ds_name.upper()}_HHblits.csv')
+    embs = np.load(f'ps4_data/data/{ds_name.lower()}/{ds_name.upper()}_embeddings.npz', allow_pickle=True)
     for row in range(len(df)):
         res_string = df['input'][row]
 
@@ -265,7 +268,7 @@ def load_cb513_dataset():
         for c in mask_raw:
             mask_str += f'{c} '
 
-        _, y, mask = get_input_data_from_res_seq(res_string, ss_string, mask_str, 'CB513')
+        _, y, mask = get_input_data_from_res_seq(res_string, ss_string, mask_str)
         r = torch.from_numpy(embs[str(row)]).float()
         yield r, y, mask
 
