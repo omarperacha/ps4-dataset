@@ -1,3 +1,4 @@
 ps4_models/Conv/*.pt filter=lfs diff=lfs merge=lfs -text
 ps4_models/Mega/*.pt filter=lfs diff=lfs merge=lfs -text
 ps4_data/data/cb513/CB513_embeddings.npz filter=lfs diff=lfs merge=lfs -text
+ps4_data/data/ts115/TS115_embeddings.npz filter=lfs diff=lfs merge=lfs -text

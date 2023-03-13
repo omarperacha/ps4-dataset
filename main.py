@@ -54,7 +54,7 @@ if __name__ == '__main__':
                     if sys.argv[3] in ['--mega', '--conv']:
                         if sys.argv[3] == '--conv':
                             model_name = 'PS4_Conv'
-                            weights_path = 'ps4_models/Conv/PS4-Conv_epoch-5_loss-0.652_acc-77.905.pt'
+                            path = 'ps4_models/Conv/PS4-Conv_epoch-5_loss-0.652_acc-77.905.pt'
                     else:
                         print(f'Please specify a valid model name. found: {sys.argv[3]}')
 
