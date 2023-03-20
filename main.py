@@ -17,6 +17,7 @@ def print_help():
     print('\t\t\t1: dataset to evaluate on')
     print('\t\t\t--cb513\t\t\tEvaluate on CB513')
     print('\t\t\t--ps4\t\t\tEvaluate on PS4')
+    print('\t\t\t--ts115\t\t\tEvaluate on TS115)')
     print('\t\t\t2: model to use')
     print('\t\t\t--mega\t\t\tUse the Mega model')
     print('\t\t\t--conv\t\t\tUse the Conv model')
@@ -101,7 +102,6 @@ if __name__ == '__main__':
 
     else:
         print_help()
-
-
+        
 
 
