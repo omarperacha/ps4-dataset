@@ -8,6 +8,10 @@ This repository contains the data itself, methods to validate and add new sample
 
 For more information, see the official [paper](https://www.biorxiv.org/content/10.1101/2023.02.28.530456).
 
+## 🤗 Hugging Face Space
+
+If you're primarily interested in using the pretrained models to predict secondary structure on your own sequences, you can use this [official Hugging Face Space](https://huggingface.co/spaces/omarperacha/protein-secondary-structure-prediction) to do so with no setup.
+
 ## Data
 
 The core dataset is contained in `ps4_data/data/data.csv`. This contains 18,731 proteins with their PDB code, index of the first residue in their respective DSSP file, their residue sequence and 9-category secondary structure sequence (including polyproline helices).
