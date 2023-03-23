@@ -132,7 +132,7 @@ def sample_new_sequence(embs_load_path, weights_load_path, model_name='PS4_Mega'
     for r in load_embs_for_sampling(embs_load_path):
 
         seq_size = len(r)
-        R = r.view(1, seq_size)
+        R = r.view(1, seq_size, 1024)
 
         pred_ss = ''
 

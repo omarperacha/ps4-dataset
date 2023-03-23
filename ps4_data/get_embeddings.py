@@ -10,15 +10,10 @@ def generate_embedings(fasta_path, output_path=None):
 
     # Create directories
     protT5_path = "ps4_data/data/protT5"
-    weights_path = "ps4_data/data/protT5/protT5_checkpoint"
     # where to store the embeddings
     per_residue_path = "ps4_data/data/protT5/output/per_residue_embeddings" if output_path is None else output_path
-    for dir_path in [protT5_path, weights_path, per_residue_path]:
+    for dir_path in [protT5_path, per_residue_path]:
         __create_dir(dir_path)
-
-    # Download weights
-    weights_remote_url = "http://data.bioembeddings.com/public/embeddings/feature_models/t5/protT5_checkpoint.pt"
-    _ = wget.download(weights_remote_url, weights_path)
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print("Using {}".format(device))
