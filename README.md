@@ -6,7 +6,7 @@ PS4 is the largest open-source dataset for Protein Single Sequence Secondary Str
 
 This repository contains the data itself, methods to validate and add new samples to the dataset, and a toolkit for developing and evaluating state-of-the-art secondary structure prediction models.
 
-For more information, see the official [paper](https://www.biorxiv.org/content/10.1101/2023.02.28.530456).
+For more information, see the official [paper](https://www.future-science.com/doi/10.2144/btn-2023-0024).
 
 ## 🤗 Hugging Face Space
 
