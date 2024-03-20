@@ -72,7 +72,7 @@ if __name__ == '__main__':
                     print(f'Please specify a valid evaluation dataset. found: {sys.argv[2]}')
 
         elif sys.argv[1] in ['--gen_dataset', '-gd']:
-            generate_embedings('ps4_data/ps4_data/data.fasta')
+            generate_embedings('ps4_data/data/data.fasta')
             save_and_tokenise_data()
             save_pt_embs_torch()
             for dtype in ['residues', 'ss']:

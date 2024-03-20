@@ -20,7 +20,7 @@ The train/test split can be found in `ps4_data/data/chain_ids.npz`.
 
 ## Installation
 
-After cloning the repository, `cd` into the root diretory and run:
+After cloning the repository, `cd` into the root directory and run:
 ```
 chmod a+rx install.sh
 ./install.sh
@@ -37,7 +37,7 @@ Building `ps4-rs` requires Rust to be installed. Please see the [official Rust l
 
 ### Data Preparation
 
-Pretrained weights are made available via git LFS. To evaluate wiith trained weights or tain a new model, first generate the pytorch-ready dataset:
+Pretrained weights are made available via git LFS. To evaluate with trained weights or tain a new model, first generate the pytorch-ready dataset:
 ```
 python main.py --gen_dataset
 ```
