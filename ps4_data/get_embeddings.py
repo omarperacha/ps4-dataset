@@ -33,7 +33,7 @@ def generate_embedings(fasta_path, output_path=None):
         results = __get_embeddings(model, tokenizer, seqs, device)
 
         # Store per-residue embeddings
-        __save_embeddings(results["residue_embs"], per_residue_path + f"{i}.npz")
+        __save_embeddings(results["residue_embs"], per_residue_path + f"/{i}.npz")
 
 
 def __get_T5_model(device):
