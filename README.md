@@ -1,10 +1,8 @@
 # PS4 Dataset 🧬
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ps4-a-next-generation-dataset-for-protein/protein-secondary-structure-prediction-on-1)](https://paperswithcode.com/sota/protein-secondary-structure-prediction-on-1?p=ps4-a-next-generation-dataset-for-protein)
-
 PS4 is the largest open-source dataset for Protein Single Sequence Secondary Structure prediction. 
 
-This repository contains the data itself, methods to validate and add new samples to the dataset, and a toolkit for developing and evaluating state-of-the-art secondary structure prediction models.
+This repository contains the data itself, pretrained AI model weights, methods to validate and add new samples to the dataset, and a toolkit for developing and evaluating state-of-the-art secondary structure prediction models.
 
 For more information, see the official [paper](https://www.future-science.com/doi/10.2144/btn-2023-0024).
 
